@@ -13,8 +13,11 @@ const { body, validationResult } = require('express-validator');
 
 //Key AND Endpoint for translator API
 let key = process.env.API_KEY;
+
+//text endpoint
 var endpoint = "https://api.cognitive.microsofttranslator.com/";
-let endpoint2 = "https://instancefortextdocumenttranslation.cognitiveservices.azure.com//translator/text/batch/v1.0";
+//document endpoint
+let endpoint2 = "https://instancefortextdocumenttranslation.cognitiveservices.azure.com/translator/text/batch/v1.0";
 
 
 //swagger options
@@ -40,13 +43,19 @@ var location = "global";
 const specs = swaggerJsdoc(options);
 
 app.use(bodyParser.json());
+//swagger documentation specified
 app.use('/docs', swaggerUi.serve, swaggerUi.setup((specs)));
+// enable cors for the application
 app.use(cors());
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+// to support URL-encoded bodies
+app.use(bodyParser.urlencoded({     
     extended: true
 }));
 
-
+//source and target container for storing documents
+/*Source container: inputdocs - stores all the documents that needs to be translated
+  Target container: translateddocs - translated documents are stored here
+*/
 let data = JSON.stringify({
     "inputs": [
         {
@@ -243,7 +252,7 @@ app.post('/documentTranslate', async function (req, res) {
         let result = { statusText: response.statusText, statusCode: response.status, headers: response.headers };
         console.log()
         console.log(JSON.stringify(result));
-        res.send('Documents translated successfully '+JSON.stringify(response.data))
+        res.send('Documents translated successfully and stored in the traslateddocs blob container');
       })
       .catch(function (error) {
         res.status(500).json({
