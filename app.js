@@ -149,7 +149,7 @@ app.get('/', (req, res) => {
 * @swagger
 * /translatetxtByCode:
 *  post:
-*   description: Returns text translated in the given language code
+*   description: Returns text translated in the given language code array
 *   produces:
 *      - application/json
 *   parameters:
@@ -167,11 +167,11 @@ app.get('/', (req, res) => {
 */
 app.post('/translatetxtByCode',[
     body('txt').trim().not().isEmpty().withMessage('txt name cannot be empty').isLength({ min: 1 }).withMessage('Text Must Be at Least 1 Characters').escape(),
-    body('code').trim().not().isEmpty().withMessage('Language code name cannot be empty').isLength({ min: 1 }).withMessage('LanguageCode must Be at Least 1 Characters').escape(),
+    body('code').isLength({ min: 1 }).withMessage('LanguageCode must Be at Least 1 Characters'),
     body('fromLang').trim().not().isEmpty().withMessage('fromLang cannot be empty').isLength({ min: 1 }).withMessage('fromLang must Be at Least 1 Characters').escape()
 ] ,async function (req, res) {
     let txt = req.body.txt;
-    console.log("length"+ txt)
+    console.log("length   "+ req.body.code)
     let lanuageCode = req.body.code;
     let fromLang = req.body.fromLang;
     let api_url = '/translate';
